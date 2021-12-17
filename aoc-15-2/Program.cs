@@ -64,14 +64,17 @@ do
                 risk = Math.Min(risk, rightCost.Value);
             }
 
-            if (x > 0 && risks[x - 1, y] is var leftCost && leftCost != null)
-            {
-                risk = Math.Min(risk, leftCost.Value);
-            }
-
             if (y < map.GetLength(1) - 1 && risks[x, y + 1] is var downCost && downCost != null)
             {
                 risk = Math.Min(risk, downCost.Value);
+            }
+
+            // The rules don't specify this but just in case the best path snakes back at some point,
+            // Consider values to the left and above us.
+
+            if (x > 0 && risks[x - 1, y] is var leftCost && leftCost != null)
+            {
+                risk = Math.Min(risk, leftCost.Value);
             }
 
             if (y > 0 && risks[x, y - 1] is var upCost && upCost != null)
