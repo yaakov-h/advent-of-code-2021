@@ -1,24 +1,38 @@
 ﻿using System.Diagnostics;
 
-var input = File.ReadAllLines("/Users/yaakov/Developer/Miniprojects/advent-of-code/aoc-15-1/input.txt");
+var input = File.ReadAllLines("/Users/yaakov/Developer/Miniprojects/advent-of-code/aoc-15-2/input.txt");
 
-// @"1163751742
-// 1381373672
-// 2136511328
-// 3694931569
-// 7463417111
-// 1319128137
-// 1359912421
-// 3125421639
-// 1293138521
-// 2311944581".Split('\n').Select(x => x.Trim()).ToArray();
+var tiling = 5;
+var map = new int[input[0].Length * tiling, input.Length * tiling];
+var size = (width: input[0].Length, height: input.Length);
 
-var map = new int[input[0].Length, input.Length];
-for (var y = 0; y < input.Length; y++)
-for (var x = 0; x < input[0].Length; x++)
+for (var tilex = 0; tilex < tiling; tilex++)
+for (var tiley = 0; tiley < tiling; tiley++)
 {
-    map[x, y] = Parse(input[y][x]);
+    FillMap(map, tilex * size.width, tiley * size.height, tilex + tiley);
 }
+
+void FillMap(int[,] map, int xOffset, int yOffset, int increment)
+{
+    for (var y = 0; y < input.Length; y++)
+    for (var x = 0; x < input[0].Length; x++)
+    {
+        var value = Parse(input[y][x]) + increment;
+        while (value > 9) value -= 9;
+        map[x + xOffset, y + yOffset] = value;
+    }
+}
+
+
+for (var y = 0; y < map.GetLength(1); y++)
+{
+    for (var x = 0; x < map.GetLength(0); x++)
+    {
+        Console.Write(map[x, y]);
+    }
+    Console.WriteLine();
+}
+Console.WriteLine();
 
 var risks = new int?[map.GetLength(0), map.GetLength(1)];
 risks[map.GetLength(0) - 1, map.GetLength(1) - 1] = map[map.GetLength(0) - 1, map.GetLength(1) - 1];
@@ -68,14 +82,14 @@ do
             var newRisk = risk + value;
             if (risks[x, y] != newRisk)
             {
-                Console.WriteLine($"Updated ({x}, {y}): {risks[x, y]} => {newRisk}");
+                //Console.WriteLine($"Updated ({x}, {y}): {risks[x, y]} => {newRisk}");
                 risks[x, y] = newRisk;
                 updated++;
             }
         }
     }
 
-    Console.WriteLine($"Updated {updated} risks.");
+    //Console.WriteLine($"Updated {updated} risks.");
 }
 while (updated > 0);
 
